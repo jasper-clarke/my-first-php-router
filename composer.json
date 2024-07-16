@@ -1,0 +1,11 @@
+{
+  "name": "jasper-at-windswept/blog",
+  "description": "My personal blog on blog.windswept.digital",
+  "type": "project",
+  "authors": [
+    {
+      "name": "jasper-at-windswept",
+      "email": "jasper@windswept.digital"
+    }
+  ]
+}
