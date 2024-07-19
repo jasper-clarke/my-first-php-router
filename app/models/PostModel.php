@@ -15,8 +15,10 @@ class PostModel
     // Get the post by its slug from the database and return either an array or null if no post is found
     public function getPostBySlug(string $slug): array|null
     {
-        $query = "SELECT * FROM posts WHERE slug = '$slug'";
-        $result = $this->db->query($query);
+        $stmt = $this->db->prepare("SELECT * FROM posts WHERE slug = ?");
+        $stmt->bind_param("s", $slug);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         if (!$result) {
             return null;
@@ -24,5 +26,32 @@ class PostModel
 
         $post = $result->fetch_assoc();
         return $post;
+    }
+
+    // Get all posts from the database and return an array of arrays
+    public function getAllPosts(): array|null
+    {
+        $stmt = $this->db->prepare("SELECT * FROM posts");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if (!$result) {
+            return null;
+        }
+
+        $posts = array();
+        while ($row = $result->fetch_assoc()) {
+            $posts[] = $row;
+        }
+        return $posts;
+    }
+
+    public function createPost(string $slug, string $title, string $content): void
+    {
+        $stmt = $this->db->prepare("INSERT INTO posts (slug, title, content) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $slug, $title, $content);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        echo $result;
     }
 }

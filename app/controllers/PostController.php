@@ -11,16 +11,16 @@ class PostController
         $post = $postModel->getPostBySlug($slug);
         // If no post is found, render the "postNotFound" view
         if (!$post) {
-            $this->render('postNotFound');
+            $this->render('postNotFound', array());
         } else {
             // Otherwise, render the "post" view and pass the post data to the view via the $GLOBALS array
-            $GLOBALS['data'] = $post;
-            $this->render('post');
+            $this->render('post', $post);
         }
     }
     // Render the view with the given path
-    private function render(string $view): void
+    private function render(string $view, array $data): void
     {
+        $postData = $data;
         require_once 'app/views/' . $view . '.php';
     }
 }

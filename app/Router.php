@@ -24,15 +24,19 @@ class Router
     public function dispatch(string $requestMethod, string $url): mixed
     {
         // First, check if the request is to a /posts/ route
-        if (substr($url, 0, strlen('/posts/')) == '/posts/') {
+        if (str_starts_with($url, '/posts/')) {
             $newUrl = substr($url, 0, strlen('/posts/'));
             $slug = substr($url, strlen('/posts/'));
             // echo '<br>' . $slug;
             return call_user_func($this->routes[$requestMethod . '/' . $newUrl], $slug);
             // If it's not a /posts/ route, check if it's a hard defined route
         } elseif (isset($this->routes[$requestMethod . '/' . $url])) {
+            if ($requestMethod == 'POST') {
+                return call_user_func($this->routes[$requestMethod . '/' . $url], $_POST);
+            } else {
+                return call_user_func($this->routes[$requestMethod . '/' . $url]);
+            }
             // Call the corresponding callback without capturing any route parameters
-            return call_user_func($this->routes[$requestMethod . '/' . $url]);
         } else {
             // TODO: Handle unknown routes with a proper 404 error page
             echo '<br>Route not found';
